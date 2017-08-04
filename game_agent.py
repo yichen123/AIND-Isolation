@@ -314,7 +314,7 @@ class AlphaBetaPlayer(IsolationPlayer):
         v = float("inf")
         for m in game.get_legal_moves():
             v = min(v, self.max_value(game.forecast_move(m), depth - 1, alpha, beta))
-            if v >= alpha:
+            if v <= alpha:
                 return v
             beta = min(beta, v)
         return v
@@ -384,11 +384,13 @@ class AlphaBetaPlayer(IsolationPlayer):
 
         v = float("-inf")
         move = None
-        d = depth
 
         for m in game.get_legal_moves():
-            w = self.min_value(game.forecast_move(m), d - 1, alpha, beta)
+            w = self.min_value(game.forecast_move(m), depth - 1, alpha, beta)
             if v < w:
                 v = w
                 move = m
+            if v >= beta:
+                return move
+            alpha = max(alpha, v)
         return move
