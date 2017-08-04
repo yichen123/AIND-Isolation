@@ -170,6 +170,32 @@ class MinimaxPlayer(IsolationPlayer):
         # Return the best move from the last completed search iteration
         return best_move
 
+    #helper functions for minimax
+    def min_value(self, game, depth):
+        if self.time_left() < self.TIMER_THRESHOLD:
+            raise SearchTimeout()
+        if depth == 0:
+            return self.score(game, self)
+        v = float("inf")
+        for m in game.get_legal_moves():
+            w = self.max_value(game.forecast_move(m), depth - 1)
+            if v > w:
+                v = w
+        return v
+
+    def max_value(self, game, depth):
+        if self.time_left() < self.TIMER_THRESHOLD:
+            raise SearchTimeout()
+        if depth == 0:
+            return self.score(game, self)
+        v = float("-inf")
+        for m in game.get_legal_moves():
+            w = self.max_value(game.forecast_move(m), depth - 1)
+            if v < w:
+                v = w
+        return v
+
+
     def minimax(self, game, depth):
         """Implement depth-limited minimax search algorithm as described in
         the lectures.
@@ -213,7 +239,17 @@ class MinimaxPlayer(IsolationPlayer):
             raise SearchTimeout()
 
         # TODO: finish this function!
-        raise NotImplementedError
+        v = float("-inf")
+        move = None
+        d = depth
+
+        for m in game.get_legal_moves():
+            w = self.min_value(game.forecast_move(m), d - 1)
+            if v < w:
+                v = w
+                move = m
+        return move
+
 
 
 class AlphaBetaPlayer(IsolationPlayer):

@@ -277,6 +277,7 @@ if __name__ == "__main__":
     # applying a move. Notice that this does NOT change the calling object
     # (unlike .apply_move()).
     new_game = game.forecast_move((1, 1))
+
     assert(new_game.to_string() != game.to_string())
     print("\nOld state:\n{}".format(game.to_string()))
     print("\nNew state:\n{}".format(new_game.to_string()))
