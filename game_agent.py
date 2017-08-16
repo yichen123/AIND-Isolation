@@ -14,10 +14,7 @@ def custom_score(game, player):
     """Calculate the heuristic value of a game state from the point of view
     of the given player.
 
-    This should be the best heuristic function for your project submission.
-
-    Note: this function should be called from within a Player instance as
-    `self.score()` -- you should not need to call this function directly.
+    This method consider the both difference between two players' available moves, and distance from center position, but put more weight on differences.
 
     Parameters
     ----------
@@ -42,14 +39,18 @@ def custom_score(game, player):
 
     own_moves = len(game.get_legal_moves(player))
     opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
-    return float(own_moves - opp_moves)
+    w, h = game.width / 2., game.height / 2.
+    y, x = game.get_player_location(player)
+    return float(own_moves - opp_moves + 0.1 * ((h - y)**2 + (w - x)**2) ** 0.5)
+
 
 def custom_score_2(game, player):
     """Calculate the heuristic value of a game state from the point of view
     of the given player.
 
-    Note: this function should be called from within a Player instance as
-    `self.score()` -- you should not need to call this function directly.
+    This method consider the difference between two players' available moves, but put more weight on minimize the opponent's moves
+
+
 
     Parameters
     ----------
@@ -73,17 +74,19 @@ def custom_score_2(game, player):
     if game.is_winner(player):
         return float("inf")
 
-    w, h = game.width / 2., game.height / 2.
-    y, x = game.get_player_location(player)
-    return float((h - y)**2 + (w - x)**2)
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    return float(own_moves - 2 * opp_moves)
+
+
 
 
 def custom_score_3(game, player):
     """Calculate the heuristic value of a game state from the point of view
     of the given player.
 
-    Note: this function should be called from within a Player instance as
-    `self.score()` -- you should not need to call this function directly.
+    This method consider both the difference between two players' available moves and also the position of the board, and return the lower value
+
 
     Parameters
     ----------
@@ -106,8 +109,12 @@ def custom_score_3(game, player):
 
     if game.is_winner(player):
         return float("inf")
+    own_moves = len(game.get_legal_moves(player))
+    opp_moves = len(game.get_legal_moves(game.get_opponent(player)))
+    w, h = game.width / 2., game.height / 2.
+    y, x = game.get_player_location(player)
+    return min(float(own_moves - opp_moves), float((h - y)**2 + (w - x)**2))
 
-    return float(len(game.get_legal_moves(player)))
 
 
 class IsolationPlayer:
